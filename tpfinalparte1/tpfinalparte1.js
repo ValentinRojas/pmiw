@@ -1,691 +1,347 @@
-// ========================================
-// TP FINAL - PERDIDO EN EL AMAZONAS
-// ETAPA 1
-// ========================================
 
+/*
+  TP FINAL: PERDIDO EN EL AMAZONAS
+  Aventura gráfica interactiva
+  Canvas: 800 x 450
+*/
 
-// ----------------------------------------
-// VARIABLES
-// ----------------------------------------
-
+// PANTALLA ACTUAL
 let pantallaActual = 0;
 
+// ARREGLO DE IMÁGENES
+let imagenes = [];
 
-// ----------------------------------------
-// NOMBRES DE LAS PANTALLAS
-// ----------------------------------------
+// NOMBRES DE LOS ARCHIVOS DE IMAGEN
+// Los archivos van dentro de la carpeta data.
+let nombresImagenes = [
+  "",                  // 0 - Inicio
+  "manaus",            // 1
+  "desaparicion",      // 2
+  "busqueda",          // 3
+  "piragua",           // 4
+  "avion",             // 5
+  "patrulla",          // 6
+  "pista",             // 7
+  "flauta",            // 8
+  "seguir",            // 9
+  "amazonas",           // 10
+  "cuwatieri",         // 11
+  "decision",          // 12
+  "final_bueno",       // 13
+  "final_neutro",      // 14
+  "final_malo",        // 15
+  ""                   // 16 - Créditos
+];
 
-const NOMBRES_PANTALLAS = [
-  "INICIO",
-  "¿CÓMO LOS BUSCÁS?",
-  "PIRAGUA",
-  "AVIÓN",
-  "PATRULLA FLUVIAL",
-  "LA PISTA",
-  "LA FLAUTA",
-  "LAS AMAZONAS",
-  "LOS CUWATIERI",
-  "FINAL BUENO",
-  "FINAL NEUTRO",
-  "FINAL MALO",
-  "CRÉDITOS"
+// TÍTULOS DE LAS PANTALLAS
+let titulos = [
+  "PERDIDO EN EL AMAZONAS",
+  "Llegás a Manaus",
+  "La desaparición",
+  "¿Cómo vas a buscar?",
+  "La ruta de la piragua",
+  "La ruta del avión",
+  "La Patrulla Fluvial",
+  "Una nueva pista",
+  "La misteriosa flauta",
+  "¿La seguís?",
+  "El Amazonas",
+  "Los Cuwatieri",
+  "¿Qué hacés?",
+  "Final: una nueva oportunidad",
+  "Final: el regreso",
+  "Final: el peligro",
+  "Créditos"
+];
+
+// TEXTOS NARRATIVOS
+// La pantalla de inicio no tiene texto narrativo.
+let textos = [
+  "",
+  "Llegás a Manaus, en Brasil. Sos un médico especializado en enfermedades tropicales y tenés una misión: encontrar a tus compañeros de expedición, que desaparecieron en la selva.",
+  "Pasaron los días y tus compañeros siguen sin aparecer. Necesitás encontrar una pista para descubrir qué les ocurrió. La selva es enorme y cada decisión puede cambiar tu destino.",
+  "Tenés varias opciones para continuar la búsqueda. Podés seguir el río en una piragua, alquilar un avión o esperar la ayuda de la Patrulla Fluvial.",
+  "Decidís avanzar por el río en una piragua. La corriente te lleva hacia zonas cada vez más aisladas. Tendrás que prestar atención a cualquier señal que pueda ayudarte.",
+  "Alquilás un avión para observar la región desde el aire. Desde arriba, la selva parece interminable. Buscás señales que indiquen por dónde pudieron haber pasado tus compañeros.",
+  "Decidís esperar a la Patrulla Fluvial. Cuando finalmente conseguís ayuda, comenzás a recorrer el río y sus alrededores en busca de noticias.",
+  "Durante la búsqueda aparece una pista extraña. Podría estar relacionada con tus compañeros y con las personas que habitan en las profundidades de la selva.",
+  "Encontrás una flauta misteriosa. Su presencia parece tener un significado especial. Te preguntás quién la dejó allí y si puede conducirte hasta tus compañeros.",
+  "Alguien parece conocer el camino que tenés que seguir. ¿Vas a confiar en esa señal y avanzar hacia lo desconocido?",
+  "Seguís adelante y te internás en el Amazonas. El entorno se vuelve cada vez más extraño y peligroso. Ya no sabés qué te espera más adelante.",
+  "Finalmente, llegás a una región habitada por los Cuwatieri. Estás más cerca de resolver el misterio, pero ahora tenés que decidir cómo actuar.",
+  "La situación se vuelve decisiva. Tenés que elegir entre confiar, retirarte o arriesgarte. Lo que hagas determinará el desenlace de tu aventura.",
+  "Decidís confiar y actuar con prudencia. Gracias a esa decisión, conseguís avanzar y encontrar una salida favorable. La búsqueda llega a un desenlace positivo.",
+  "Decidís retirarte antes de que el peligro sea mayor. No conseguís resolver todo el misterio, pero lográs regresar. La aventura termina con muchas preguntas sin respuesta.",
+  "Decidís arriesgarte y avanzar sin medir las consecuencias. La selva demuestra ser más peligrosa de lo que imaginabas. Tu búsqueda termina de la peor manera.",
+  "Trabajo práctico final: aventura gráfica interactiva.\n\nLibro: Perdido en el Amazonas.\nAutor: R. A. Montgomery.\nIlustraciones: L. Morrill.\n\nRealizado por Valentín Rojas y Luz Antonella Salazar Mesias."
+];
+
+// TEXTOS DE LOS BOTONES
+// Cada fila corresponde a una pantalla.
+// Se pueden usar hasta tres botones por pantalla.
+let botones = [
+  ["COMENZAR", "CRÉDITOS", ""],       // 0
+  ["CONTINUAR", "", ""],              // 1
+  ["BUSCAR PISTAS", "", ""],           // 2
+  ["PIRAGUA", "AVIÓN", "PATRULLA"],    // 3
+  ["CONTINUAR", "", ""],              // 4
+  ["CONTINUAR", "", ""],              // 5
+  ["CONTINUAR", "", ""],              // 6
+  ["SEGUIR LA PISTA", "ABANDONAR", ""],// 7
+  ["CONTINUAR", "", ""],              // 8
+  ["SÍ, SEGUIR", "NO, RETIRARME", ""], // 9
+  ["CONTINUAR", "", ""],              // 10
+  ["CONTINUAR", "", ""],              // 11
+  ["CONFIAR", "RETIRARME", "ARRIESGARME"], // 12
+  ["VOLVER AL INICIO", "", ""],       // 13
+  ["VOLVER AL INICIO", "", ""],       // 14
+  ["VOLVER AL INICIO", "", ""],       // 15
+  ["VOLVER AL INICIO", "", ""]        // 16
+];
+
+// DESTINOS DE LOS BOTONES
+// Los números indican qué pantalla se abre al hacer clic.
+let destinos = [
+  [1, 16, -1],       // Inicio
+  [2, -1, -1],       // Manaus
+  [3, -1, -1],       // Desaparición
+  [4, 5, 6],         // Elegir transporte
+  [7, -1, -1],       // Piragua
+  [7, -1, -1],       // Avión
+  [7, -1, -1],       // Patrulla
+  [8, 14, -1],       // Pista
+  [9, -1, -1],       // Flauta
+  [10, 14, -1],      // ¿La seguís?
+  [11, -1, -1],      // Amazonas
+  [12, -1, -1],      // Cuwatieri
+  [13, 14, 15],      // Decisión final
+  [0, -1, -1],       // Final bueno
+  [0, -1, -1],       // Final neutro
+  [0, -1, -1],       // Final malo
+  [0, -1, -1]        // Créditos
 ];
 
 
-// ----------------------------------------
-// PRELOAD
-// ----------------------------------------
-
+// CARGA DE IMÁGENES
 function preload() {
+  for (let i = 0; i < nombresImagenes.length; i++) {
+    if (nombresImagenes[i] != "") {
+      let numeroImagen = i;
 
-  // Más adelante:
-  // imágenes
-  // sonidos
-  // música
-  // etc.
-
+      /*loadImage(
+        "data/" + nombresImagenes[i] + ".png",
+        function(imagenCargada) {
+          imagenes[numeroImagen] = imagenCargada;
+        },
+        function() {
+          imagenes[numeroImagen] = null;
+        }
+      );
+        */
+    }
+  }
 }
 
 
-// ----------------------------------------
-// SETUP
-// ----------------------------------------
-
+// CONFIGURACIÓN INICIAL
 function setup() {
-
   createCanvas(800, 450);
-
   textAlign(CENTER, CENTER);
   rectMode(CENTER);
-
+  imageMode(CENTER);
+  textFont("sans-serif");
 }
 
 
-// ----------------------------------------
-// DRAW
-// ----------------------------------------
-
+// DIBUJO PRINCIPAL
 function draw() {
-
-  dibujarFondoGenerico();
-
+  dibujarFondo();
   mostrarPantalla(pantallaActual);
-
 }
 
 
-// ========================================
-// MOSTRAR PANTALLA
-// ========================================
-
-function mostrarPantalla(numero) {
-
-  if (numero === 0) {
-    mostrarInicio();
-
-  } else if (numero === 1) {
-    mostrarDecisionInicial();
-
-  } else if (numero === 2) {
-    mostrarPiragua();
-
-  } else if (numero === 3) {
-    mostrarAvion();
-
-  } else if (numero === 4) {
-    mostrarPatrulla();
-
-  } else if (numero === 5) {
-    mostrarPista();
-
-  } else if (numero === 6) {
-    mostrarFlauta();
-
-  } else if (numero === 7) {
-    mostrarAmazonas();
-
-  } else if (numero === 8) {
-    mostrarCuwatieri();
-
-  } else if (numero === 9) {
-    mostrarFinal(
-      "FINAL BUENO",
-      "Tus compañeros son rescatados.",
-      "La búsqueda finalmente tiene éxito."
-    );
-
-  } else if (numero === 10) {
-    mostrarFinal(
-      "FINAL NEUTRO",
-      "Decidís regresar.",
-      "El peligro es demasiado grande y volvés sin encontrar a tus compañeros."
-    );
-
-  } else if (numero === 11) {
-    mostrarFinal(
-      "FINAL MALO",
-      "La aventura termina de la peor manera.",
-      "Una mala decisión te deja atrapado en la selva o bajo el poder de la flauta."
-    );
-
-  } else if (numero === 12) {
-    mostrarCreditos();
-  }
-
-}
-
-
-// ========================================
-// PANTALLA DE INICIO
-// ========================================
-
-function mostrarInicio() {
-
-  mostrarTitulo("PERDIDO EN EL AMAZONAS");
-
-  textSize(20);
-
-  text(
-    "Una aventura gráfica interactiva",
-    width / 2,
-    120
-  );
-
-  textSize(17);
-
-  text(
-    "Llegás a Manaus para reunirte con una expedición médica,\n" +
-    "pero descubrís que tus compañeros han desaparecido.",
-    width / 2,
-    180
-  );
-
-  crearBoton(
-    "COMENZAR",
-    width / 2,
-    310,
-    1
-  );
-
-  crearBoton(
-    "CRÉDITOS",
-    width / 2,
-    380,
-    12
-  );
-
-}
-
-
-// ========================================
-// DECISIÓN INICIAL
-// ========================================
-
-function mostrarDecisionInicial() {
-
-  mostrarTitulo("¿CÓMO LOS BUSCÁS?");
-
-  mostrarTexto(
-    "Tus compañeros desaparecieron después de internarse en la selva.\n" +
-    "Ahora tenés que decidir cómo comenzar la búsqueda."
-  );
-
-  crearBoton(
-    "IR EN PIRAGUA",
-    180,
-    330,
-    2
-  );
-
-  crearBoton(
-    "IR EN AVIÓN",
-    400,
-    330,
-    3
-  );
-
-  crearBoton(
-    "PATRULLA FLUVIAL",
-    620,
-    330,
-    4
-  );
-
-}
-
-
-// ========================================
-// PIRAGUA
-// ========================================
-
-function mostrarPiragua() {
-
-  mostrarTitulo("VIAJE EN PIRAGUA");
-
-  mostrarTexto(
-    "Decidís viajar por el río junto a Owaduga.\n" +
-    "La selva se vuelve cada vez más cerrada mientras avanzás.\n" +
-    "Buscás cualquier señal que pueda llevarte hasta tus compañeros."
-  );
-
-  crearBoton(
-    "CONTINUAR",
-    width / 2,
-    350,
-    5
-  );
-
-}
-
-
-// ========================================
-// AVIÓN
-// ========================================
-
-function mostrarAvion() {
-
-  mostrarTitulo("BÚSQUEDA DESDE EL AIRE");
-
-  mostrarTexto(
-    "Decidís intentar localizar a tus compañeros desde el aire.\n" +
-    "Sobrevolás la inmensa selva buscando alguna señal\n" +
-    "de la expedición desaparecida."
-  );
-
-  crearBoton(
-    "CONTINUAR",
-    width / 2,
-    350,
-    5
-  );
-
-}
-
-
-// ========================================
-// PATRULLA FLUVIAL
-// ========================================
-
-function mostrarPatrulla() {
-
-  mostrarTitulo("PATRULLA FLUVIAL");
-
-  mostrarTexto(
-    "Decidís esperar y finalmente te incorporás a una Patrulla Fluvial.\n" +
-    "Ahora contás con ayuda para internarte en el Amazonas\n" +
-    "y buscar a los miembros desaparecidos de la expedición."
-  );
-
-  crearBoton(
-    "CONTINUAR",
-    width / 2,
-    350,
-    5
-  );
-
-}
-
-
-// ========================================
-// LA PISTA
-// ========================================
-
-function mostrarPista() {
-
-  mostrarTitulo("UNA PISTA");
-
-  mostrarTexto(
-    "Después de avanzar por la selva encontrás una pista.\n" +
-    "Podría estar relacionada con el recorrido de tus compañeros.\n" +
-    "Seguirla puede acercarte a ellos, pero también puede llevarte\n" +
-    "hacia un lugar desconocido."
-  );
-
-  crearBoton(
-    "SEGUIR LA PISTA",
-    250,
-    350,
-    6
-  );
-
-  crearBoton(
-    "REGRESAR",
-    550,
-    350,
-    10
-  );
-
-}
-
-
-// ========================================
-// LA FLAUTA
-// ========================================
-
-function mostrarFlauta() {
-
-  mostrarTitulo("LA FLAUTA");
-
-  mostrarTexto(
-    "De repente escuchás una misteriosa melodía proveniente\n" +
-    "de las profundidades de la selva.\n" +
-    "Recordás que tus compañeros también habían escuchado\n" +
-    "una flauta antes de desaparecer."
-  );
-
-  crearBoton(
-    "SEGUIR LA FLAUTA",
-    250,
-    350,
-    7
-  );
-
-  crearBoton(
-    "NO SEGUIRLA",
-    550,
-    350,
-    10
-  );
-
-}
-
-
-// ========================================
-// LAS AMAZONAS
-// ========================================
-
-function mostrarAmazonas() {
-
-  mostrarTitulo("LAS AMAZONAS");
-
-  mostrarTexto(
-    "Siguiendo el sonido de la flauta llegás hasta un territorio\n" +
-    "desconocido y te encontrás con las Amazonas.\n" +
-    "Ellas parecen conocer información sobre la desaparición\n" +
-    "de tus compañeros."
-  );
-
-  crearBoton(
-    "CONTINUAR",
-    width / 2,
-    350,
-    8
-  );
-
-}
-
-
-// ========================================
-// LOS CUWATIERI
-// ========================================
-
-function mostrarCuwatieri() {
-
-  mostrarTitulo("LOS CUWATIERI");
-
-  mostrarTexto(
-    "Las pistas te conducen hasta los Cuwatieri.\n" +
-    "La misteriosa flauta parece estar relacionada con ellos.\n" +
-    "Ahora tenés que decidir si continuar avanzando o abandonar\n" +
-    "la búsqueda antes de quedar atrapado."
-  );
-
-  crearBoton(
-    "CONTINUAR",
-    width / 2,
-    350,
-    9
-  );
-
-}
-
-
-// ========================================
-// FINALES
-// ========================================
-
-function mostrarFinal(titulo, linea1, linea2) {
-
-  mostrarTitulo(titulo);
-
-  textSize(22);
-
-  text(
-    linea1,
-    width / 2,
-    160
-  );
-
-  textSize(17);
-
-  text(
-    linea2,
-    width / 2,
-    220
-  );
-
-  crearBoton(
-    "VOLVER A JUGAR",
-    width / 2,
-    350,
-    0
-  );
-
-}
-
-
-// ========================================
-// CRÉDITOS
-// ========================================
-
-function mostrarCreditos() {
-
-  mostrarTitulo("CRÉDITOS");
-
-  textSize(18);
-
-  text(
-    "PERDIDO EN EL AMAZONAS",
-    width / 2,
-    130
-  );
-
-  textSize(16);
-
-  text(
-    "R. A. Montgomery\n" +
-    "Ilustraciones: L. Morrill\n\n" +
-    "Adaptación interactiva\n\n" +
-    "Valentín Rojas\n" +
-    "Luz Antonella Salazar Mesias",
-    width / 2,
-    220
-  );
-
-  crearBoton(
-    "VOLVER AL INICIO",
-    width / 2,
-    380,
-    0
-  );
-
-}
-
-
-// ========================================
-// TÍTULO
-// ========================================
-
-function mostrarTitulo(titulo) {
-
-  fill(255);
+// FONDO
+function dibujarFondo() {
+  background(20, 45, 42);
+
+  // Decoración sencilla para el fondo.
   noStroke();
+  fill(30, 65, 55);
+  ellipse(100, 80, 240, 180);
+  ellipse(700, 350, 300, 220);
+  ellipse(650, 60, 180, 130);
 
-  textSize(28);
-
-  text(
-    titulo,
-    width / 2,
-    45
-  );
-
-}
-
-
-// ========================================
-// TEXTO NARRATIVO
-// ========================================
-
-function mostrarTexto(texto) {
-
-  fill(240);
-  noStroke();
-
-  textSize(18);
-
-  text(
-    texto,
-    width / 2,
-    170
-  );
-
-}
-
-
-// ========================================
-// CREAR BOTÓN
-// ========================================
-
-function crearBoton(texto, x, y, destino) {
-
-  fill(70);
-  stroke(255);
+  stroke(90, 120, 85);
   strokeWeight(2);
+  line(0, 430, 800, 430);
+  noStroke();
+}
 
-  rect(
-    x,
-    y,
-    180,
-    55,
-    10
-  );
 
+// MUESTRA UNA PANTALLA
+function mostrarPantalla(numero) {
+  mostrarTitulo(titulos[numero]);
+
+  // La portada solo muestra el título y los botones.
+  if (numero != 0) {
+    mostrarTexto(textos[numero]);
+    mostrarImagen(numero, width / 2, 255, 360, 200);
+  }
+
+  // Los créditos no necesitan imagen.
+  if (numero == 16) {
+    mostrarTexto(textos[numero]);
+  }
+
+  for (let i = 0; i < botones[numero].length; i++) {
+    if (botones[numero][i] != "") {
+      crearBoton(
+        botones[numero][i],
+        width / (contarBotones(numero) + 1) *
+        (posicionBoton(numero, i) + 1),
+        400
+      );
+    }
+  }
+}
+
+
+// TÍTULO
+function mostrarTitulo(titulo) {
   fill(255);
   noStroke();
+  textSize(28);
+  text(titulo, width / 2, 40);
+}
 
+
+// TEXTO NARRATIVO
+function mostrarTexto(contenido) {
+  fill(245);
+  noStroke();
   textSize(16);
-
-  text(
-    texto,
-    x,
-    y
-  );
-
+  text(contenido, width / 2, 105, 720, 95);
 }
 
 
-// ========================================
-// MOUSE PRESSED
-// ========================================
+// IMAGEN DE CADA PANTALLA
+function mostrarImagen(numero, x, y, anchoMaximo, altoMaximo) {
+  if (imagenes[numero] != null && imagenes[numero] != undefined) {
+    let imagen = imagenes[numero];
 
+    let escala = min(
+      anchoMaximo / imagen.width,
+      altoMaximo / imagen.height
+    );
+
+    image(
+      imagen,
+      x,
+      y,
+      imagen.width * escala,
+      imagen.height * escala
+    );
+  } else {
+    dibujarMarcadorImagen(
+      nombresImagenes[numero],
+      x,
+      y,
+      anchoMaximo,
+      altoMaximo
+    );
+  }
+}
+
+
+// MARCADOR PROVISORIO MIENTRAS FALTAN LAS IMÁGENES
+function dibujarMarcadorImagen(nombre, x, y, ancho, alto) {
+  rectMode(CENTER);
+  stroke(180);
+  strokeWeight(2);
+  fill(35, 75, 65);
+  rect(x, y, ancho, alto, 10);
+
+  noStroke();
+  fill(230);
+  textSize(16);
+  text("Imagen: " + nombre, x, y);
+}
+
+
+// CREA UN BOTÓN
+function crearBoton(etiqueta, x, y) {
+  rectMode(CENTER);
+  stroke(220);
+  strokeWeight(1);
+  fill(45, 95, 75);
+  rect(x, y, 170, 38, 8);
+
+  noStroke();
+  fill(255);
+  textSize(14);
+  text(etiqueta, x, y);
+}
+
+
+// CUENTA CUÁNTOS BOTONES TIENE UNA PANTALLA
+function contarBotones(numero) {
+  let cantidad = 0;
+
+  for (let i = 0; i < botones[numero].length; i++) {
+    if (botones[numero][i] != "") {
+      cantidad++;
+    }
+  }
+
+  return cantidad;
+}
+
+
+// CALCULA LA POSICIÓN DE UN BOTÓN
+function posicionBoton(numero, indice) {
+  let posicion = 0;
+
+  for (let i = 0; i < indice; i++) {
+    if (botones[numero][i] != "") {
+      posicion++;
+    }
+  }
+
+  return posicion;
+}
+
+
+// DETECTA CUANDO SE HACE CLIC
 function mousePressed() {
+  let cantidad = contarBotones(pantallaActual);
 
-  if (pantallaActual === 0) {
+  for (let i = 0; i < botones[pantallaActual].length; i++) {
+    if (botones[pantallaActual][i] != "") {
+      let x = width / (cantidad + 1) *
+      (posicionBoton(pantallaActual, i) + 1);
 
-    if (botonPresionado(width / 2, 310)) {
-      cambiarPantalla(1);
+      if (botonPresionado(x, 400)) {
+        if (destinos[pantallaActual][i] != -1) {
+          cambiarPantalla(destinos[pantallaActual][i]);
+        }
+      }
     }
-
-    else if (botonPresionado(width / 2, 380)) {
-      cambiarPantalla(12);
-    }
-
   }
-
-
-  else if (pantallaActual === 1) {
-
-    if (botonPresionado(180, 330)) {
-      cambiarPantalla(2);
-    }
-
-    else if (botonPresionado(400, 330)) {
-      cambiarPantalla(3);
-    }
-
-    else if (botonPresionado(620, 330)) {
-      cambiarPantalla(4);
-    }
-
-  }
-
-
-  else if (
-    pantallaActual === 2 ||
-    pantallaActual === 3 ||
-    pantallaActual === 4
-  ) {
-
-    if (botonPresionado(width / 2, 350)) {
-      cambiarPantalla(5);
-    }
-
-  }
-
-
-  else if (pantallaActual === 5) {
-
-    if (botonPresionado(250, 350)) {
-      cambiarPantalla(6);
-    }
-
-    else if (botonPresionado(550, 350)) {
-      cambiarPantalla(10);
-    }
-
-  }
-
-
-  else if (pantallaActual === 6) {
-
-    if (botonPresionado(250, 350)) {
-      cambiarPantalla(7);
-    }
-
-    else if (botonPresionado(550, 350)) {
-      cambiarPantalla(10);
-    }
-
-  }
-
-
-  else if (pantallaActual === 7) {
-
-    if (botonPresionado(width / 2, 350)) {
-      cambiarPantalla(8);
-    }
-
-  }
-
-
-  else if (pantallaActual === 8) {
-
-    if (botonPresionado(width / 2, 350)) {
-      cambiarPantalla(9);
-    }
-
-  }
-
-
-  else if (
-    pantallaActual === 9 ||
-    pantallaActual === 10 ||
-    pantallaActual === 11 ||
-    pantallaActual === 12
-  ) {
-
-    if (botonPresionado(width / 2, 350)) {
-      cambiarPantalla(0);
-    }
-
-  }
-
 }
 
 
-// ========================================
-// CAMBIAR DE PANTALLA
-// ========================================
-
-function cambiarPantalla(destino) {
-
-  pantallaActual = destino;
-
-}
-
-
-// ========================================
-// DETECTAR BOTÓN
-// ========================================
-
+// COMPRUEBA SI EL CLIC FUE DENTRO DEL BOTÓN
 function botonPresionado(x, y) {
-
   return (
-    mouseX > x - 90 &&
-    mouseX < x + 90 &&
-    mouseY > y - 27.5 &&
-    mouseY < y + 27.5
+    mouseX > x - 85 &&
+    mouseX < x + 85 &&
+    mouseY > y - 19 &&
+    mouseY < y + 19
   );
-
 }
 
 
-// ========================================
-// FONDO TEMPORAL
-// ========================================
-
-function dibujarFondoGenerico() {
-
-  background(25);
-
+// CAMBIA DE PANTALLA
+function cambiarPantalla(destino) {
+  pantallaActual = destino;
 }
