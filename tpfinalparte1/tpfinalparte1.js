@@ -20,7 +20,6 @@ let posX = -100
 // NOMBRES DE LOS ARCHIVOS DE IMAGEN
 // Los archivos van dentro de la carpeta data.
 let nombresImagenes = [
-let nombresImagenes = [
   "", // 0 - Inicio
   "manaus", // 1
   "desaparicion", // 2
@@ -38,7 +37,6 @@ let nombresImagenes = [
   "final_neutro", // 14
   "final_malo", // 15
   "" // 16 - Créditos
-];
 ];
 
 // TÍTULOS DE LAS PANTALLAS
@@ -151,7 +149,6 @@ function preload() {
         }
       );
     }
-  }
   }
 }
 
