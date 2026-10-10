@@ -1,36 +1,44 @@
-
 /*
   TP FINAL: PERDIDO EN EL AMAZONAS
-  Aventura gráfica interactiva
-  Canvas: 800 x 450
-*/
+ Aventura gráfica interactiva
+ Canvas: 800 x 450
+ */
 
+let musica;
+let estaSonando = false;
 // PANTALLA ACTUAL
 let pantallaActual = 0;
 
 // ARREGLO DE IMÁGENES
 let imagenes = [];
 
+let personaje = [];
+let fondoCreditos;
+let imagenCreditos;
+let posX = -100
+
 // NOMBRES DE LOS ARCHIVOS DE IMAGEN
 // Los archivos van dentro de la carpeta data.
 let nombresImagenes = [
-  "",                  // 0 - INICIO
-  "manaus",            // 1
-  "desaparicion",      // 2
-  "busqueda",          // 3
-  "piragua",           // 4
-  "avion",             // 5
-  "patrulla",          // 6
-  "pista",             // 7
-  "flauta",            // 8
-  "la_sigues",         // 9
-  "amazonas",          // 10
-  "final_bueno",       // 11
-  "cuwatieri",         // 12
-  "que_haces",         // 13
-  "final_neutro",      // 14
-  "final_malo",        // 15
-  ""                   // 16 - CREDITOS
+let nombresImagenes = [
+  "", // 0 - Inicio
+  "manaus", // 1
+  "desaparicion", // 2
+  "busqueda", // 3
+  "piragua", // 4
+  "avion", // 5
+  "patrulla", // 6
+  "pista", // 7
+  "flauta", // 8
+  "la_sigues", // 9
+  "amazonas", // 10
+  "cuwatieri", // 11
+  "decision", // 12
+  "final_bueno", // 13
+  "final_neutro", // 14
+  "final_malo", // 15
+  "" // 16 - Créditos
+];
 ];
 
 // TÍTULOS DE LAS PANTALLAS
@@ -55,7 +63,6 @@ let titulos = [
 ];
 
 // TEXTOS NARRATIVOS
-// La pantalla de inicio no tiene texto narrativo.
 let textos = [
   "",
   "Llegás a Manaus, en Brasil. Sos un médico especializado en enfermedades tropicales y tenés una misión: encontrar a tus compañeros de expedición, que desaparecieron en la selva.",
@@ -77,53 +84,59 @@ let textos = [
 ];
 
 // TEXTOS DE LOS BOTONES
-// Cada fila corresponde a una pantalla.
-// Se pueden usar hasta tres botones por pantalla.
 let botones = [
-  ["COMENZAR", "CRÉDITOS", ""],       // 0
-  ["CONTINUAR", "", ""],              // 1
-  ["BUSCAR PISTAS", "", ""],           // 2
-  ["PIRAGUA", "AVIÓN", "PATRULLA"],    // 3
-  ["CONTINUAR", "", ""],              // 4
-  ["CONTINUAR", "", ""],              // 5
-  ["CONTINUAR", "", ""],              // 6
-  ["SEGUIR LA PISTA", "ABANDONAR", ""],// 7
-  ["CONTINUAR", "", ""],              // 8
+  ["COMENZAR", "CRÉDITOS", ""], // 0
+  ["CONTINUAR", "", ""], // 1
+  ["BUSCAR PISTAS", "", ""], // 2
+  ["PIRAGUA", "AVIÓN", "PATRULLA"], // 3
+  ["CONTINUAR", "", ""], // 4
+  ["CONTINUAR", "", ""], // 5
+  ["CONTINUAR", "", ""], // 6
+  ["SEGUIR LA PISTA", "ABANDONAR", ""], // 7
+  ["CONTINUAR", "", ""], // 8
   ["SÍ, SEGUIR", "NO, RETIRARME", ""], // 9
-  ["CONTINUAR", "", ""],              // 10
-  ["CONTINUAR", "", ""],              // 11
+  ["CONTINUAR", "", ""], // 10
+  ["CONTINUAR", "", ""], // 11
   ["CONFIAR", "RETIRARME", "ARRIESGARME"], // 12
-  ["VOLVER AL INICIO", "", ""],       // 13
-  ["VOLVER AL INICIO", "", ""],       // 14
-  ["VOLVER AL INICIO", "", ""],       // 15
+  ["VOLVER AL INICIO", "", ""], // 13
+  ["VOLVER AL INICIO", "", ""], // 14
+  ["VOLVER AL INICIO", "", ""], // 15
   ["VOLVER AL INICIO", "", ""]        // 16
 ];
 
 // DESTINOS DE LOS BOTONES
-// Los números indican qué pantalla se abre al hacer clic.
 let destinos = [
-  [1, 16, -1],       // Inicio
-  [2, -1, -1],       // Manaus
-  [3, -1, -1],       // Desaparición
-  [4, 5, 6],         // Elegir transporte
-  [7, -1, -1],       // Piragua
-  [7, -1, -1],       // Avión
-  [7, -1, -1],       // Patrulla
-  [8, 14, -1],       // Pista
-  [9, -1, -1],       // Flauta
-  [10, 14, -1],      // ¿La seguís?
-  [11, -1, -1],      // Amazonas
-  [12, -1, -1],      // Cuwatieri
-  [13, 14, 15],      // Decisión final
-  [0, -1, -1],       // Final bueno
-  [0, -1, -1],       // Final neutro
-  [0, -1, -1],       // Final malo
+  [1, 16, -1], // Inicio
+  [2, -1, -1], // Manaus
+  [3, -1, -1], // Desaparición
+  [4, 5, 6], // Elegir transporte
+  [7, -1, -1], // Piragua
+  [7, -1, -1], // Avión
+  [7, -1, -1], // Patrulla
+  [8, 14, -1], // Pista
+  [9, -1, -1], // Flauta
+  [10, 14, -1], // ¿La seguís?
+  [11, -1, -1], // Amazonas
+  [12, -1, -1], // Cuwatieri
+  [13, 14, 15], // Decisión final
+  [0, -1, -1], // Final bueno
+  [0, -1, -1], // Final neutro
+  [0, -1, -1], // Final malo
   [0, -1, -1]        // Créditos
 ];
 
 
 // CARGA DE IMÁGENES
 function preload() {
+  musica = loadSound('data/musica/musica.mp3');
+
+  fondoCreditos = loadImage('data/fondocreditos.png');
+  imagenCreditos = loadImage('data/creditos.png');
+  
+  for (let i = 0; i < 12; i++){
+    personaje.push(loadImage('data/camina' + nf(i, 2) + '.png'));
+  }
+
   for (let i = 0; i < nombresImagenes.length-5; i++) {
     if (nombresImagenes[i] != "") {
       let numeroImagen = i;
@@ -138,6 +151,7 @@ function preload() {
         }
       );
     }
+  }
   }
 }
 
@@ -158,12 +172,10 @@ function draw() {
   mostrarPantalla(pantallaActual);
 }
 
-
 // FONDO
 function dibujarFondo() {
   background(20, 45, 42);
 
-  // Decoración sencilla para el fondo.
   noStroke();
   fill(30, 65, 55);
   ellipse(100, 80, 240, 180);
@@ -181,29 +193,44 @@ function dibujarFondo() {
 function mostrarPantalla(numero) {
   mostrarTitulo(titulos[numero]);
 
-  // La portada solo muestra el título y los botones.
-  if (numero != 0) {
+  // La portada y los créditos se manejan aparte
+  if (numero != 0 && numero != 16) {
     mostrarTexto(textos[numero]);
     mostrarImagen(numero, width / 2, 255, 360, 200);
   }
 
-  // Los créditos no necesitan imagen.
+  // Pantalla de Créditos (16)
   if (numero == 16) {
     mostrarTexto(textos[numero]);
+    image(fondoCreditos, width/2, height/2, 800, 450);
+    
+    push();
+    fill(75, 75, 75, 75);
+    rect(width/2, height/2, 800, 450);
+    pop();
+    
+    image(imagenCreditos, width/2, height/3, 600, 250);
+    
+    // Animación automática fluida (el número 8 cambia la velocidad)
+    let frameAnimacion = floor(frameCount / 8) % 12;
+    animar(frameAnimacion);  
   }
 
   for (let i = 0; i < botones[numero].length; i++) {
     if (botones[numero][i] != "") {
       crearBoton(
         botones[numero][i],
-        width / (contarBotones(numero) + 1) *
-        (posicionBoton(numero, i) + 1),
+        width / (contarBotones(numero) + 1) * (posicionBoton(numero, i) + 1),
         400
       );
     }
   }
 }
 
+function animar(indiceFrame){
+  image(personaje[indiceFrame], posX, 355);
+  posX = posX + 0.5
+}
 
 // TÍTULO
 function mostrarTitulo(titulo) {
@@ -312,16 +339,22 @@ function posicionBoton(numero, indice) {
 
 // DETECTA CUANDO SE HACE CLIC
 function mousePressed() {
+  if (!estaSonando) {
+    musica.loop();
+    estaSonando = true;
+  }
   let cantidad = contarBotones(pantallaActual);
 
   for (let i = 0; i < botones[pantallaActual].length; i++) {
     if (botones[pantallaActual][i] != "") {
-      let x = width / (cantidad + 1) *
-      (posicionBoton(pantallaActual, i) + 1);
+      let x = width / (cantidad + 1) * (posicionBoton(pantallaActual, i) + 1);
 
       if (botonPresionado(x, 400)) {
         if (destinos[pantallaActual][i] != -1) {
           cambiarPantalla(destinos[pantallaActual][i]);
+          if (destinos[pantallaActual][0] === 0){
+            posX = -100;
+          }
         }
       }
     }
