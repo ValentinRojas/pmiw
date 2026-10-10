@@ -209,7 +209,7 @@ function mostrarPantalla(numero) {
 }
 
 function animar(indiceFrame){
-  image(personaje[indiceFrame], posX, 295);
+  image(personaje[indiceFrame], posX, 355);
   posX = posX + 0.5
 }
 
@@ -333,6 +333,9 @@ function mousePressed() {
       if (botonPresionado(x, 400)) {
         if (destinos[pantallaActual][i] != -1) {
           cambiarPantalla(destinos[pantallaActual][i]);
+          if (destinos[pantallaActual][0] === 0){
+            posX = -100;
+          }
         }
       }
     }
