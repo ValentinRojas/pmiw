@@ -14,7 +14,7 @@ let imagenes = [];
 // NOMBRES DE LOS ARCHIVOS DE IMAGEN
 // Los archivos van dentro de la carpeta data.
 let nombresImagenes = [
-  "",                  // 0 - Inicio
+  "",                  // 0 - INICIO
   "manaus",            // 1
   "desaparicion",      // 2
   "busqueda",          // 3
@@ -23,14 +23,14 @@ let nombresImagenes = [
   "patrulla",          // 6
   "pista",             // 7
   "flauta",            // 8
-  "seguir",            // 9
-  "amazonas",           // 10
-  "cuwatieri",         // 11
-  "decision",          // 12
-  "final_bueno",       // 13
+  "la_sigues",         // 9
+  "amazonas",          // 10
+  "final_bueno",       // 11
+  "cuwatieri",         // 12
+  "que_haces",         // 13
   "final_neutro",      // 14
   "final_malo",        // 15
-  ""                   // 16 - Créditos
+  ""                   // 16 - CREDITOS
 ];
 
 // TÍTULOS DE LAS PANTALLAS
@@ -124,11 +124,11 @@ let destinos = [
 
 // CARGA DE IMÁGENES
 function preload() {
-  for (let i = 0; i < nombresImagenes.length; i++) {
+  for (let i = 0; i < nombresImagenes.length-5; i++) {
     if (nombresImagenes[i] != "") {
       let numeroImagen = i;
-
-      /*loadImage(
+      
+      loadImage(
         "data/" + nombresImagenes[i] + ".png",
         function(imagenCargada) {
           imagenes[numeroImagen] = imagenCargada;
@@ -137,7 +137,6 @@ function preload() {
           imagenes[numeroImagen] = null;
         }
       );
-        */
     }
   }
 }
