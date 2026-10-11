@@ -1,7 +1,9 @@
 /*
   TP FINAL: PERDIDO EN EL AMAZONAS
  Aventura gráfica interactiva
- Canvas: 800 x 450
+ 
+ VIDEO: https://youtu.be/2LVyTsM5kxw
+ 
  */
 
 let musica;
