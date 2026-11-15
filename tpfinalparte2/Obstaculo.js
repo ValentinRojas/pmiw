@@ -1,24 +1,53 @@
-/*class Obstaculo {
+
+class Obstaculo {
+
   constructor(x, y) {
+
     this.x = x;
     this.y = y;
+
     this.velocidad = 3;
-    this.tamano = 35;
+    this.tamano = 48;
+
+    this.elegirImagen();
   }
+
+
+  elegirImagen() {
+
+    this.numeroImagen = floor(random(0, 3));
+  }
+
 
   mostrar() {
-    fill(100, 65, 35);
-    noStroke();
-    rect(this.x, this.y, this.tamano, this.tamano, 8);
+
+    imageMode(CENTER);
+
+    image(
+      imagenesObstaculos[this.numeroImagen],
+      this.x,
+      this.y,
+      this.tamano,
+      this.tamano
+    );
   }
 
+
   mover() {
+
     this.y += this.velocidad;
 
-    // Si sale de la pantalla, vuelve arriba.
     if (this.y > height + this.tamano) {
-      this.y = -this.tamano;
-      this.x = random(50, width - 50);
+      this.reiniciar();
     }
+  }
+
+
+  reiniciar() {
+
+    this.x = random(165, 640);
+    this.y = -this.tamano;
+
+    this.elegirImagen();
   }
 }

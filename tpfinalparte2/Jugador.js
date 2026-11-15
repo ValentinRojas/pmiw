@@ -1,20 +1,41 @@
-/*class Jugador {
+
+class Jugador {
+
   constructor() {
+
     this.x = 400;
-    this.y = 330;
+    this.y = 300;
+
     this.velocidad = 5;
-    this.ancho = 60;
-    this.alto = 40;
+
+    this.ancho = 58;
+    this.alto = 105;
+
     this.vidas = 3;
+
+    this.frameActual = 0;
+    this.ultimoGolpe = -2000;
   }
+
 
   mostrar() {
-    fill(120, 75, 35);
-    noStroke();
-    ellipse(this.x, this.y, this.ancho, this.alto);
+
+    this.frameActual = floor(frameCount / 10) % 3;
+
+    imageMode(CENTER);
+
+    image(
+      imagenesPiragua[this.frameActual],
+      this.x,
+      this.y,
+      this.ancho,
+      this.alto
+    );
   }
 
+
   mover() {
+
     if (keyIsDown(LEFT_ARROW)) {
       this.x -= this.velocidad;
     }
@@ -31,8 +52,20 @@
       this.y += this.velocidad;
     }
 
-    // Evitamos que la piragua salga de la pantalla.
-    this.x = constrain(this.x, 35, width - 35);
-    this.y = constrain(this.y, 35, height - 35);
+    this.x = constrain(this.x, 155, 650);
+    this.y = constrain(this.y, 75, 335);
+  }
+
+
+  colisiona(obstaculo) {
+
+    let distancia = dist(
+      this.x,
+      this.y,
+      obstaculo.x,
+      obstaculo.y
+    );
+
+    return distancia < 48;
   }
 }
