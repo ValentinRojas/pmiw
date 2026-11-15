@@ -1,4 +1,4 @@
-https://youtu.be/nXq1ruFtJBw
+//https://youtu.be/nXq1ruFtJBw
 let juego;
 
 // IMAGENES
